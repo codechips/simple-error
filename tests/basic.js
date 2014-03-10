@@ -17,7 +17,7 @@ test('default error', function (t) {
 
   t.equal(err.name, 'DefaultError');
   t.equal(err.type, 'DefaultError');
-  t.equal(err.code, 6001);
+  t.equal(err.code, 0);
   t.equal(err.statusCode, 500);
   t.equal(err.message, 'Unknown');
   t.end();
@@ -76,8 +76,8 @@ test('error json formatting', function (t) {
   var expected = {
     success: false,
     message: 'Wrong data supplied',
-    statusCode: 400,
-    code: 1234
+    code: 1234,
+    statusCode: 400
   };
 
   t.equal(err.toJSON(), JSON.stringify(expected));
@@ -112,4 +112,25 @@ test('test include stack trace in JSON output when set to true', function (t) {
   t.ok(result.hasOwnProperty('stack'));
 
   t.end();
+});
+
+test('should use constructor if defined', function (t) {
+   var BasicError = SimpleError.define('BasicError', {
+    code: 1234,
+    statusCode: 400,
+    message: 'Error with custom constructor',
+    ctor: function (errorCode, links) {
+      this.errorCode = errorCode;
+      this.links = links;
+    }
+  });
+
+  var links = ['http://www.npmjs.org', 'http://www.google.com'];
+  var err = new BasicError(101, links);
+
+  t.equal(err.links, links);
+  t.deepEqual(err.errorCode, 101);
+
+  t.end();
+
 });
