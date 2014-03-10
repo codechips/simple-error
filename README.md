@@ -4,7 +4,7 @@ Node.js module that lets you define and use errors consistently across your APIs
 
 ## Example
 
-SHOW ME THE CODE!!!
+SHOW ME THE CODE!
 
 ``` js
 var assert = require('assert');
@@ -93,9 +93,28 @@ var err = new BasicError(101, links);
 
 ```
 
-## Defaults
+## Error definition defaults and options
 
 There are some "sensible" defaults when it comes to defining your errors.
+
+### code (any value)
+Meant to be used as an internal code for other apps or APIs. Default is `0`.
+
+### statusCode (integer)
+HTTP error status code. Default is `500`.
+
+### message (string)
+Message format string. Called by node's util.format for interpolation if needed. Default is `Unknown`.
+
+### showStack (boolean)
+When set to true stacktrace is included in `toJSON` call. Default is `false`
+
+### ctor (function)
+If supplied will be used in new error construction. See tests.
+
+## methods (dict of name:fn)
+If supplied all the methods will be copied to prototype and thus available on all instances of that
+error type. See tests.
 
 ## License
 
