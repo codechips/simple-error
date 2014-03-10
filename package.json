@@ -10,7 +10,14 @@
     "error",
     "exception"
   ],
-  "author": "Ilia Mikhailov",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/iljoo/simple-error.git"
+  },
+  "author": {
+    "name": "Ilia Mikhailov",
+    "email": "ilia.mikhailov@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "tape": "^2.10.2"
