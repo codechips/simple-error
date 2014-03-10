@@ -1,6 +1,6 @@
 {
   "name": "simple-error",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Node.js module that lets you define and use errors consistently across your APIs and apps. Simple. HTTP friendly.",
   "main": "index.js",
   "scripts": {
