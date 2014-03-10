@@ -29,7 +29,8 @@ assert.equal(err.name, 'ApiError'); // true
 assert.equal(err.code, 100);        // true
 assert.equal(err.statusCode, 500);  // true
 
-console.log(err.toJSON()); // {"success":false,"message":"NO!","statusCode":400,"code":101}
+console.log(err.toJSON()); 
+// {"success":false,"message":"NO!","statusCode":400,"code":101}
 
 console.log(err.badCall()); // Bad call: NO!
 
@@ -73,13 +74,14 @@ assert.ok(wrappedError instanceof ApiError);        // true
 assert.ok(wrappedError instanceof BadRequestError); // true
 assert.equal(wrappedError.inner, e);                // true
 
-console.log(wrappedError.toJSON()); // {"success":false,"message":"oops","statusCode":400,"code":102}
+console.log(wrappedError.toJSON()); 
+// {"success":false,"message":"oops","statusCode":400,"code":102}
 
 ```
 
 ## Defaults
 
-There are some "sensible" defaults
+There are some "sensible" defaults when it comes to defining your errors.
 
 ## License
 
