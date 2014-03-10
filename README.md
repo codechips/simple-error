@@ -1,6 +1,6 @@
 # simple-error
 
-Node.js module that lets you define and use errors consitently accross your APIs and apps. Simple. HTTP friendly.
+Node.js module that lets you define and use errors consistently across your APIs and apps. Simple. HTTP friendly.
 
 ## Example
 

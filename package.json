@@ -1,7 +1,7 @@
 {
   "name": "simple-error",
   "version": "0.0.0",
-  "description": "Module that lets you define and use errors consistently across your apps. Simple. HTTP friendly.",
+  "description": "Node.js module that lets you define and use errors consistently across your APIs and apps. Simple. HTTP friendly.",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/tape tests/*"
