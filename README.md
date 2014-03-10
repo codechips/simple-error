@@ -112,7 +112,7 @@ When set to true stacktrace is included in `toJSON` call. Default is `false`
 ### ctor (function)
 If supplied will be used in new error construction. See tests.
 
-## methods (dict of name:fn)
+### methods (dict of name:fn)
 If supplied all the methods will be copied to prototype and thus available on all instances of that
 error type. See tests.
 
