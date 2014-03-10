@@ -1,0 +1,18 @@
+{
+  "name": "simple-error",
+  "version": "0.0.0",
+  "description": "Module that lets you define and use errors consistently across your apps. Simple. HTTP friendly.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/tape tests/*"
+  },
+  "keywords": [
+    "error",
+    "exception"
+  ],
+  "author": "Ilia Mikhailov",
+  "license": "MIT",
+  "devDependencies": {
+    "tape": "^2.10.2"
+  }
+}
