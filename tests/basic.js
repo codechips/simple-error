@@ -3,7 +3,7 @@ var SimpleError = require('..');
 
 test('should throw if no error name given', function (t) {
   t.throws(function () {
-    var FaultyError = SimpleError.define();
+    SimpleError.define();
   }, Error);
   t.end();
 });

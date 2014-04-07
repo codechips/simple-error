@@ -1,6 +1,6 @@
 'use strict';
-var Util = require('util');
-var slice = Array.prototype.slice;
+var assert = require('assert');
+var util = require('util');
 var NON_JSON_PROPS = ['isError', 'type', 'name'];
 
 var copyMethodsToPrototype = function (ctor, methods) {
@@ -11,6 +11,13 @@ var copyMethodsToPrototype = function (ctor, methods) {
   }
 };
 
+var extractArgs = function(name, opts) {
+	assert.ok(name, 'Error name is required');
+	assert.ok(typeof(name) === 'string', 'Error name must be a string');
+
+	return { name: name, opts: opts };
+};
+
 var SimpleError = module.exports = {};
 
 SimpleError.isError = function (error) {
@@ -18,9 +25,10 @@ SimpleError.isError = function (error) {
 };
 
 SimpleError.define = function (name, opts) {
-  if (!name) {
-    throw new Error('Error name must be given');
-  }
+	var args = extractArgs(name, opts);
+	name = args.name;
+	opts = args.opts;
+
   var code = 0,
     statusCode = 500,
     showStack = false,
@@ -38,7 +46,7 @@ SimpleError.define = function (name, opts) {
   }
 
   function Constructor() {
-    var args = slice.call(arguments);
+    var args = [].slice.call(arguments);
 
     Error.captureStackTrace(this, this.constructor);
     if (ctor) {
@@ -48,7 +56,7 @@ SimpleError.define = function (name, opts) {
       if (messageFormatString) {
         args.unshift(messageFormatString);
       }
-      this.message = args.length ? Util.format.apply(null, args) : 'Unknown';
+      this.message = args.length ? util.format.apply(null, args) : 'Unknown';
     }
     this.name = this.type = name;
     this.code = code;
@@ -56,7 +64,7 @@ SimpleError.define = function (name, opts) {
     this.isError = true;
   }
 
-  Util.inherits(Constructor, Error);
+  util.inherits(Constructor, Error);
 
   Constructor.prototype.toJSON = function toJson() {
     var result = { success: false };
@@ -72,11 +80,13 @@ SimpleError.define = function (name, opts) {
     if (showStack) {
       result.stack = this.stack;
     }
+
     return JSON.stringify(result);
   };
 
   Constructor.wrap = function (error) {
     var err = new Constructor();
+
     Object.keys(error).forEach(function (prop) {
       if (prop !== 'name' && prop !== 'type') {
         err[prop] = error[prop];
@@ -86,13 +96,19 @@ SimpleError.define = function (name, opts) {
       err.message = error.message;
     }
     err.inner = error;
+
     return err;
   };
 
   Constructor.define = function (name, opts) {
+		var args = extractArgs(name, opts);
+		name = args.name;
+		opts = args.opts;
+
     var Child = SimpleError.define(name, opts);
-    Util.inherits(Child, Constructor);
+    util.inherits(Child, Constructor);
     copyMethodsToPrototype(Child, opts.methods);
+
     return Child;
   };
 

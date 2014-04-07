@@ -55,3 +55,16 @@ test('not found error', function (t) {
   t.end();
 });
 
+test('should throw if no error name given', function (t) {
+  t.throws(function () {
+    ApiError.define({});
+  }, Error);
+  t.end();
+});
+
+test('should throw if given name is empty', function (t) {
+  t.throws(function () {
+    ApiError.define('', {});
+  }, Error);
+  t.end();
+});
