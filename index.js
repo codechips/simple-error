@@ -15,7 +15,7 @@ var extractArgs = function(name, opts) {
 	assert.ok(name, 'Error name is required');
 	assert.ok(typeof(name) === 'string', 'Error name must be a string');
 
-	return { name: name, opts: opts };
+	return { name: name.trim(), opts: opts };
 };
 
 var SimpleError = module.exports = {};
