@@ -56,8 +56,8 @@ SimpleError.define = function (name, opts) {
     this.isError = true;
 
     if (ctor) {
-      ctor.apply(this, args);
       this.message = messageFormatString || 'Unknown';
+      ctor.apply(this, args);
     } else {
       if (messageFormatString) {
         args.unshift(messageFormatString);

@@ -25,7 +25,11 @@ var NotFoundError = ApiError.define('NotFoundError', {
 
 var ErrorWithCtor = ApiError.define('ErrorWithCtor', {
   code: 0,
-  ctor: function(opts) {
+	message: '',
+  ctor: function(message, opts) {
+		if (message) {
+			this.message = message;
+		}
     if (opts) {
       if (opts.code) {
         this.code = opts.code;
@@ -84,9 +88,14 @@ test('should throw if given name is empty', function (t) {
 });
 
 test('should override constructor args', function(t) {
-	var error = new ErrorWithCtor({statusCode: 200, code: 2014});
+	var error = new ErrorWithCtor(null, {statusCode: 200, code: 2014});
 	t.equal(error.code, 2014);
 	t.equal(error.statusCode, 200);
 	t.end();
 });
 
+test('should be possible to set message in conjunction with ctor', function(t) {
+	var error = new ErrorWithCtor('my_message', {statusCode: 200, code: 2014});
+	t.equal(error.message, 'my_message');
+	t.end();
+});
