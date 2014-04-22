@@ -75,9 +75,9 @@ test('error json formatting', function (t) {
 
   var expected = {
     success: false,
-    message: 'Wrong data supplied',
     code: 1234,
-    statusCode: 400
+    statusCode: 400,
+    message: 'Wrong data supplied'
   };
 
   t.equal(err.toJSON(), JSON.stringify(expected));

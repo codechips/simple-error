@@ -25,9 +25,9 @@ SimpleError.isError = function (error) {
 };
 
 SimpleError.define = function (name, opts) {
-	var args = extractArgs(name, opts);
-	name = args.name;
-	opts = args.opts;
+  var args = extractArgs(name, opts);
+  name = args.name;
+  opts = args.opts;
 
   var code = 0,
     statusCode = 500,
@@ -49,6 +49,12 @@ SimpleError.define = function (name, opts) {
     var args = [].slice.call(arguments);
 
     Error.captureStackTrace(this, this.constructor);
+
+    this.name = this.type = name;
+    this.code = code;
+    this.statusCode = statusCode;
+    this.isError = true;
+
     if (ctor) {
       ctor.apply(this, args);
       this.message = messageFormatString || 'Unknown';
@@ -58,10 +64,6 @@ SimpleError.define = function (name, opts) {
       }
       this.message = args.length ? util.format.apply(null, args) : 'Unknown';
     }
-    this.name = this.type = name;
-    this.code = code;
-    this.statusCode = statusCode;
-    this.isError = true;
   }
 
   util.inherits(Constructor, Error);
@@ -101,9 +103,9 @@ SimpleError.define = function (name, opts) {
   };
 
   Constructor.define = function (name, opts) {
-		var args = extractArgs(name, opts);
-		name = args.name;
-		opts = args.opts;
+    var args = extractArgs(name, opts);
+    name = args.name;
+    opts = args.opts;
 
     var Child = SimpleError.define(name, opts);
     util.inherits(Child, Constructor);
