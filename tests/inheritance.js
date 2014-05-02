@@ -73,6 +73,13 @@ test('not found error', function (t) {
   t.end();
 });
 
+test('should allow to define suberror with only name given', function (t) {
+  var EmptyError = ApiError.define('EmptyError');
+  var err = new EmptyError();
+  t.equal(err.name, 'EmptyError');
+  t.end();
+});
+
 test('should throw if no error name given', function (t) {
   t.throws(function () {
     ApiError.define({});

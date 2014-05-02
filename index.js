@@ -12,10 +12,10 @@ var copyMethodsToPrototype = function (ctor, methods) {
 };
 
 var extractArgs = function(name, opts) {
-	assert.ok(name, 'Error name is required');
-	assert.ok(typeof(name) === 'string', 'Error name must be a string');
+  assert.ok(name, 'Error name is required');
+  assert.ok(typeof(name) === 'string', 'Error name must be a string');
 
-	return { name: name.trim(), opts: opts };
+  return { name: name.trim(), opts: opts };
 };
 
 var SimpleError = module.exports = {};
@@ -66,7 +66,7 @@ SimpleError.define = function (name, opts) {
     }
   }
 
-  util.inherits(Constructor, Error);
+  Constructor.prototype = Object.create(Error.prototype);
 
   Constructor.prototype.toJSON = function toJson() {
     var result = { success: false };
@@ -105,7 +105,7 @@ SimpleError.define = function (name, opts) {
   Constructor.define = function (name, opts) {
     var args = extractArgs(name, opts);
     name = args.name;
-    opts = args.opts;
+    opts = args.opts || {};
 
     var Child = SimpleError.define(name, opts);
     util.inherits(Child, Constructor);
