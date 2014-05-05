@@ -64,6 +64,24 @@ test('error with custom methods', function (t) {
   t.end();
 });
 
+test('error friendly formatting', function(t) {
+   var BasicError = SimpleError.define('BasicError', {
+    code: 1234,
+    statusCode: 400,
+    message: 'Wrong data supplied'
+  });
+
+  var friendly = new BasicError().friendly();
+  t.equal(friendly.code, 1234);
+	
+	t.equal(friendly.success, false);
+	var excludedProps = ['isError', 'type', 'name'];
+	excludedProps.forEach(function (prop) {
+		t.notOk(friendly[prop]);
+	});
+  t.end();
+});
+
 test('error json formatting', function (t) {
    var BasicError = SimpleError.define('BasicError', {
     code: 1234,

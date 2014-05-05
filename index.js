@@ -68,7 +68,11 @@ SimpleError.define = function (name, opts) {
 
   util.inherits(Constructor, Error);
 
-  Constructor.prototype.toJSON = function toJson() {
+  Constructor.prototype.toJSON = function toJSON() {
+		return JSON.stringify(this.friendly());
+	};
+
+  Constructor.prototype.friendly = function friendly() {
     var result = { success: false };
 
     Object.keys(this)
@@ -83,7 +87,7 @@ SimpleError.define = function (name, opts) {
       result.stack = this.stack;
     }
 
-    return JSON.stringify(result);
+    return result;
   };
 
   Constructor.wrap = function (error) {
