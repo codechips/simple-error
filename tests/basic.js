@@ -73,13 +73,33 @@ test('error friendly formatting', function(t) {
 
   var friendly = new BasicError().friendly();
   t.equal(friendly.code, 1234);
-	
+
 	t.equal(friendly.success, false);
 	var excludedProps = ['isError', 'type', 'name'];
 	excludedProps.forEach(function (prop) {
 		t.notOk(friendly[prop]);
 	});
   t.end();
+});
+
+test('exclude predefined props in friendly output', function (t) {
+   var BasicError = SimpleError.define('BasicError', {
+    code: 1234,
+    statusCode: 400,
+    message: 'Wrong data supplied',
+		exclude: ['username', 'password'],
+		ctor: function (username, password) {
+			this.username = username;
+			this.password = password;
+		}
+  });
+
+	var friendly = new BasicError('john', 'qwerty').friendly();
+	['username', 'password'].forEach(function (prop) {
+		t.notOk(friendly[prop]);
+	});
+
+	t.end();
 });
 
 test('error json formatting', function (t) {

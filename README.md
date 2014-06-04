@@ -2,18 +2,22 @@
 
 Node.js module that lets you define and use errors consistently across your APIs and apps. Simple. HTTP friendly.
 
-## Example
-
-SHOW ME THE CODE!
+## Example usage
 
 ``` js
 var assert = require('assert');
 var SimpleError = require('.');
 
-// Define a custom error constructor
+var MyError = SimpleError.define('MyError');
+var myError = new MyError('boom');
+
+assert.ok(myerror instanceof MyError); // true
+assert.ok(myerror instanceof Error); // true
+assert.equal(myError.message, 'boom'); // true
+
 var ApiError = SimpleError.define('ApiError', {
-  code: 100, // internal code if needed
-  statusCode: 500, // http response code
+  code: 100,
+  statusCode: 500,
   methods: {
     badCall: function () {
       return 'Bad call: ' + this.message;
@@ -21,7 +25,6 @@ var ApiError = SimpleError.define('ApiError', {
   }
 });
 
-// Create an instance
 var err = new ApiError('NO!');
 
 assert.equal(err.type, 'ApiError'); // true
@@ -39,11 +42,10 @@ assert.ok(err instanceof ApiError); // true
 
 var util = require('util');
 
-// Does not work with node.js util.isError method
-// but hey we don't actually need that, right?
+// Warning! Does not work with node.js util.isError method
 util.isError(err); // false
 
-// Subclassing errors
+// Sub errors
 var BadRequestError = ApiError.define('BadRequestError', {
   code: 102,
   statusCode: 400,
@@ -106,15 +108,32 @@ HTTP error status code. Default is `500`.
 ### message (string)
 Message format string. Called by node's util.format for interpolation if needed. Default is `Unknown`.
 
+### exclude (array[string])
+Properties to exclude when calling `friendly` method. For example: `exclude: ['code', 'foo', 'bar', 'baz']`.
+Properties that are always excluded are `['isError', 'type', 'name']`
+
 ### showStack (boolean)
 When set to true stacktrace is included in `toJSON` call. Default is `false`
 
 ### ctor (function)
-If supplied will be used in new error construction. See tests.
+If supplied will be used in new error construction as a constructor. See tests.
 
-### methods (dict of name:fn)
+### methods (dict of functions)
 If supplied all the methods will be copied to prototype and thus available on all instances of that
 error type. See tests.
+
+## Instance methods
+
+### friendly()
+Returns a frendly error object with properties excluded defined in exclude
+option
+
+## Class methods
+
+### .wrap(err)
+Takes an error and returns an new instance of error with passed in error set as
+`.inner` property and all other properties copied over to new instance.
+
 
 ## License
 

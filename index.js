@@ -33,12 +33,14 @@ SimpleError.define = function (name, opts) {
     statusCode = 500,
     showStack = false,
     messageFormatString,
+    excludedProps = [],
     ctor;
 
   if (opts) {
     code = opts.code || code;
     statusCode = opts.statusCode || statusCode;
-    messageFormatString = opts.message || undefined;
+    messageFormatString = opts.message;
+    excludedProps = NON_JSON_PROPS.concat(opts.exclude || []);
     showStack = opts.showStack || showStack;
     if (opts.ctor && typeof opts.ctor === 'function') {
       ctor = opts.ctor;
@@ -69,15 +71,15 @@ SimpleError.define = function (name, opts) {
   Constructor.prototype = Object.create(Error.prototype);
 
   Constructor.prototype.toJSON = function toJSON() {
-		return JSON.stringify(this.friendly());
-	};
+    return JSON.stringify(this.friendly());
+  };
 
   Constructor.prototype.friendly = function friendly() {
     var result = { success: false };
 
     Object.keys(this)
       .filter(function (prop) {
-        return NON_JSON_PROPS.indexOf(prop) === -1;
+        return excludedProps.indexOf(prop) === -1;
       })
       .forEach(function (prop) {
         result[prop] = this[prop];

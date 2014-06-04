@@ -94,15 +94,35 @@ test('should throw if given name is empty', function (t) {
   t.end();
 });
 
-test('should override constructor args', function(t) {
-	var error = new ErrorWithCtor(null, {statusCode: 200, code: 2014});
+test('should override constructor args', function (t) {
+	var error = new ErrorWithCtor(null, { statusCode: 200, code: 2014 });
 	t.equal(error.code, 2014);
 	t.equal(error.statusCode, 200);
 	t.end();
 });
 
-test('should be possible to set message in conjunction with ctor', function(t) {
-	var error = new ErrorWithCtor('my_message', {statusCode: 200, code: 2014});
-	t.equal(error.message, 'my_message');
+test('should be possible to set message in conjunction with ctor', function (t) {
+	var error = new ErrorWithCtor('my message', {statusCode: 200, code: 2014 });
+	t.equal(error.message, 'my message');
+	t.end();
+});
+
+test('should exclude props defined in parent', function (t) {
+	var ParentError = SimpleError.define('ParentError', {
+		exclude: ['foo', 'bar']
+	});
+
+	var ChildError = ParentError.define('ChildError', {
+		ctor: function (foo, bar) {
+			this.foo = foo;
+			this.bar = bar;
+		}
+	});
+
+	var friendly = new ChildError('foo', 'bar').friendly();
+	['foo', 'bar'].forEach(function (prop) {
+		t.notOk(friendly[prop]);
+	});
+
 	t.end();
 });
