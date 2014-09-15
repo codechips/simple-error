@@ -75,7 +75,7 @@ test('error friendly formatting', function(t) {
   t.equal(friendly.code, 1234);
 
 	t.equal(friendly.success, false);
-	var excludedProps = ['isError', 'type', 'name'];
+	var excludedProps = ['isError'];
 	excludedProps.forEach(function (prop) {
 		t.notOk(friendly[prop]);
 	});
@@ -113,6 +113,8 @@ test('error json formatting', function (t) {
 
   var expected = {
     success: false,
+    type: 'BasicError',
+    name: 'BasicError',
     code: 1234,
     statusCode: 400,
     message: 'Wrong data supplied'

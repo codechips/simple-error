@@ -1,7 +1,7 @@
 'use strict';
 var assert = require('assert');
 var util = require('util');
-var NON_JSON_PROPS = ['isError', 'type', 'name'];
+var NON_JSON_PROPS = ['isError'];
 
 var copyMethodsToPrototype = function (ctor, methods) {
   if (methods) {
@@ -40,8 +40,8 @@ SimpleError.define = function (name, opts) {
     code = opts.code || code;
     statusCode = opts.statusCode || statusCode;
     messageFormatString = opts.message;
-    excludedProps = NON_JSON_PROPS.concat(opts.exclude || []);
     showStack = opts.showStack || showStack;
+    excludedProps = NON_JSON_PROPS.concat(opts.exclude || []);
     if (opts.ctor && typeof opts.ctor === 'function') {
       ctor = opts.ctor;
     }
