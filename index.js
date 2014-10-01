@@ -1,7 +1,4 @@
 'use strict';
-
-/*jshint node:true */
-
 var assert = require('assert');
 var util = require('util');
 var NON_JSON_PROPS = ['isError', 'exclude', 'showStack'];
@@ -14,26 +11,24 @@ var copyMethodsToPrototype = function (ctor, methods) {
   }
 };
 
-var setDefaults = function(opts){
+var setDefaults = function (opts) {
   var defaults = {
     code: 0,
     statusCode: 500,
     showStack: false
   };
 
-  Object.keys(defaults).forEach(function(prop){
-    if (prop in opts){}
-    else
-      opts[prop] = defaults[prop];
+  Object.keys(defaults).forEach(function (prop) {
+    opts[prop] = opts[prop] || defaults[prop];
   });
 
   return opts;
 };
 
-var ErrorConstructor = function(Constructor, name, opts, args) {
+var ErrorConstructor = function ErrorConstructor(Constructor, name, opts, args) {
   this.name = this.type = name;
 
-  Object.keys(opts).forEach(function(prop){
+  Object.keys(opts).forEach(function (prop) {
     this[prop] = opts[prop];
   }.bind(this));
 
@@ -53,7 +48,7 @@ var ErrorConstructor = function(Constructor, name, opts, args) {
   Error.captureStackTrace(this, this.constructor);
 };
 
-var extractArgs = function(name, opts) {
+var extractArgs = function (name, opts) {
   assert.ok(name, 'Error name is required');
   assert.ok(typeof(name) === 'string', 'Error name must be a string');
 
