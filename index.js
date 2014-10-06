@@ -1,7 +1,7 @@
 'use strict';
 var assert = require('assert');
 var util = require('util');
-var NON_JSON_PROPS = ['isError', 'exclude', 'showStack'];
+var NON_JSON_PROPS = ['isError', 'exclude', 'showStack', 'ctor', 'methods'];
 
 var copyMethodsToPrototype = function (ctor, methods) {
   if (methods) {

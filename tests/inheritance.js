@@ -52,6 +52,13 @@ var ErrorWithExcludeProps = ApiErrorWithExclude.define('ErrorWithExcludeProps', 
   exclude: ['message', 'customInt']
 });
 
+
+var doesNotIncludeReservedProperties = function (t, err) {
+  ['isError', 'exclude', 'showStack', 'ctor', 'methods'].forEach(function (prop) {
+    t.notOk(err[prop], 'does not include ['+prop+']');
+  });
+};
+
 test('api error', function (t) {
   var err = new ApiError();
 
@@ -135,6 +142,8 @@ test('should exclude props defined in parent', function (t) {
 		t.notOk(friendly[prop]);
 	});
 
+  doesNotIncludeReservedProperties(t, friendly);
+
   t.equal(friendly.success, false, 'Success should be false');
 	t.end();
 });
@@ -152,6 +161,9 @@ test('excluded properties with inheritence', function (t) {
   t.equal(friendly.statusCode, 505);
   t.equal(friendly.customMessage, 'message2');
   t.equal(friendly.success, false, 'Success should be false');
+
+  doesNotIncludeReservedProperties(t, friendly);
+
   t.end();
 });
 
@@ -175,5 +187,8 @@ test('excluded properties with inheritence in two layers', function (t) {
   t.ok(err instanceof ApiErrorWithExclude);
   t.ok(err instanceof ErrorWithExcludeProps);
   t.ok(err instanceof NewError);
+
+  doesNotIncludeReservedProperties(t, friendly);
+
   t.end();
 });
