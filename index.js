@@ -25,17 +25,14 @@ var setDefaults = function (opts) {
   return opts;
 };
 
-var ErrorConstructor = function ErrorConstructor(Constructor, name, opts, args) {
+var ErrorConstructor = function ErrorConstructor(parent, name, opts, args) {
   this.name = this.type = name;
 
   Object.keys(opts).forEach(function (prop) {
     this[prop] = opts[prop];
   }.bind(this));
 
-  copyMethodsToPrototype(Constructor, opts.methods);
-
   if (opts.ctor) {
-    this.message = opts.message || 'Unknown';
     opts.ctor.apply(this, args);
   } else {
     if (opts.message) {
@@ -45,13 +42,12 @@ var ErrorConstructor = function ErrorConstructor(Constructor, name, opts, args) 
   }
   if (this.ctor) this.ctor.apply(this, args);
 
-  Error.captureStackTrace(this, this.constructor);
+  Error.captureStackTrace(this, this.parent);
 };
 
 var extractArgs = function (name, opts) {
   assert.ok(name, 'Error name is required');
   assert.ok(typeof(name) === 'string', 'Error name must be a string');
-
   return { name: name.trim(), opts: opts || {} };
 };
 
@@ -69,10 +65,12 @@ SimpleError.define = function (name, opts) {
   function BaseError() {
     ErrorConstructor.call(this, BaseError, name, opts, [].slice.call(arguments));
     this.exclude = NON_JSON_PROPS.concat(opts.exclude || []);
+    this.message = this.message || 'Unknown';
   }
 
   BaseError.prototype = Object.create(Error.prototype);
   BaseError.prototype.constructor = BaseError;
+  copyMethodsToPrototype(BaseError, opts.methods);
 
   BaseError.prototype.toJSON = function toJSON() {
     return JSON.stringify(this.friendly());
@@ -121,17 +119,23 @@ SimpleError.define = function (name, opts) {
 
     function ChildError(){
       var args = [].slice.call(arguments);
-
       parent.apply(this, arguments);
-      var parentExclude = this.exclude;
-      ErrorConstructor.call(this, BaseError, name, opts, args);
 
-      this.exclude = this.exclude.concat(parentExclude || []);
+      var parentExclude = this.exclude || [];
+      ErrorConstructor.call(this, parent, name, opts, args);
+
+      this.exclude = this.exclude
+                        .concat(parentExclude)
+                        .reduce(function (excludes, ex) {
+                          if (excludes.indexOf(ex) === -1) excludes.push(ex);
+                          return excludes;
+                        }, []);
     }
 
     ChildError.prototype = Object.create(parent.prototype);
     ChildError.prototype.constructor = ChildError;
     ChildError.define = BaseError.define;
+    copyMethodsToPrototype(ChildError, opts.methods);
 
     return ChildError;
   };
