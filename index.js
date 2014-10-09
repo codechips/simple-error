@@ -2,7 +2,7 @@
 var assert = require('assert');
 var util = require('util');
 var NON_JSON_PROPS = ['isError'];
-var RESERVED_NAMES = ['ctor', 'exclude', 'showStack'];
+var RESERVED_NAMES = ['ctor', 'exclude', 'showStack', 'methods'];
 
 var copyMethodsToPrototype = function (ctor, methods) {
   if (methods) {
