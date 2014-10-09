@@ -52,14 +52,16 @@ test('basic error with message formatting', function (t) {
 });
 
 test('error with custom methods', function (t) {
-  var CustomError = SimpleError.define('BasicError', {
+  var BasicError = SimpleError.define('BasicError', {
     methods: {
       customMessage: function () {
         return 'MESSAGE: ' + this.message;
       }
     }
   });
-  var err = new CustomError('hello');
+
+  var err = new BasicError('hello');
+  t.ok(typeof err.customMessage === 'function');
   t.equal(err.customMessage(), 'MESSAGE: hello');
   t.end();
 });
