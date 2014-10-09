@@ -142,7 +142,7 @@ test('should not include stack trace in JSON by default', function (t) {
 });
 
 test('test include stack trace in JSON output when set to true', function (t) {
-   var BasicError = SimpleError.define('BasicError', {
+  var BasicError = SimpleError.define('BasicError', {
     code: 1234,
     statusCode: 400,
     message: 'Wrong data supplied',
@@ -157,7 +157,7 @@ test('test include stack trace in JSON output when set to true', function (t) {
 });
 
 test('should use constructor if defined', function (t) {
-   var BasicError = SimpleError.define('BasicError', {
+  var BasicError = SimpleError.define('BasicError', {
     code: 1234,
     statusCode: 400,
     message: 'Error with custom constructor',
@@ -174,5 +174,21 @@ test('should use constructor if defined', function (t) {
   t.deepEqual(err.errorCode, 101);
 
   t.end();
+});
 
+test('should include other properties defined in opts', function (t) {
+   var BasicError = SimpleError.define('BasicError', {
+    code: 1234,
+    statusCode: 400,
+    message: 'Error with custom constructor',
+    description: 'this is description',
+    func: function () { return 'prohibited'; }
+  });
+
+  var err = new BasicError();
+
+  t.equal(err.description, 'this is description');
+  t.notOk(err.func);
+
+  t.end();
 });

@@ -213,3 +213,26 @@ test('code and statusCode should be inherited', function (t) {
 
   t.end();
 });
+
+test('properties set on parent should be inherited', function (t) {
+  var ParentError = SimpleError.define('ParentError', {
+    code: 1,
+    statusCode: 400,
+    message: 'Parent error',
+    description: 'hello'
+  });
+
+  var ChildError = ParentError.define('ChildError', {
+    code: 2,
+    statusCode: 404
+  });
+
+  var err = new ChildError();
+
+  t.equal(err.code, 2);
+  t.equal(err.statusCode, 404);
+  t.equal(err.message, 'Parent error')
+  t.equal(err.description, 'hello')
+
+  t.end();
+});

@@ -2,6 +2,7 @@
 var assert = require('assert');
 var util = require('util');
 var NON_JSON_PROPS = ['isError'];
+var RESERVED_NAMES = ['ctor', 'exclude', 'showStack'];
 
 var copyMethodsToPrototype = function (ctor, methods) {
   if (methods) {
@@ -31,6 +32,7 @@ var setDefaults = function (opts) {
   Object.keys(defaults).forEach(function (prop) {
     opts[prop] = opts[prop] || defaults[prop];
   });
+
   opts.exclude = setExclude(opts.exclude);
 
   return opts;
@@ -65,7 +67,7 @@ var attachFriendly = function (name, opts) {
   };
 };
 
-var define = function (name, opts) {
+var define = function define(name, opts) {
   var args = extractArgs(name, opts);
   var messageFormatString, showStack, exclude, ctor;
 
@@ -82,7 +84,7 @@ var define = function (name, opts) {
   }
 
   function BaseError() {
-    var args = [].slice.call(arguments);
+    var cargs = [].slice.call(arguments);
 
     Error.captureStackTrace(this, this.constructor);
 
@@ -91,24 +93,31 @@ var define = function (name, opts) {
     this.statusCode = opts.statusCode;
     this.isError = true;
 
+    Object.keys(opts).forEach(function (prop) {
+      var value = opts[prop];
+      if (typeof value !== 'function' && RESERVED_NAMES.indexOf(prop) === -1) {
+        this[prop] = value;
+      }
+    }.bind(this));
+
     if (ctor) {
       this.message = messageFormatString || 'Unknown';
-      ctor.apply(this, args);
+      ctor.apply(this, cargs);
     } else {
       if (messageFormatString) {
-        args.unshift(messageFormatString);
+        cargs.unshift(messageFormatString);
       }
-      this.message = args.length ? util.format.apply(null, args) : 'Unknown';
+      this.message = cargs.length ? util.format.apply(null, cargs) : 'Unknown';
     }
   }
 
   BaseError.prototype = Object.create(Error.prototype);
   BaseError._opts = opts;
+
   BaseError.prototype.friendly = attachFriendly(name, opts);
   BaseError.prototype.toJSON = function toJSON() {
     return JSON.stringify(this.friendly());
   };
-
 
   BaseError.wrap = function (error) {
     var err = new BaseError();
