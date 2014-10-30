@@ -86,7 +86,9 @@ var define = function define(name, opts) {
   function BaseError() {
     var cargs = [].slice.call(arguments);
 
-    Error.captureStackTrace(this, this.constructor);
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     this.name = this.type = name;
     this.code = opts.code;
