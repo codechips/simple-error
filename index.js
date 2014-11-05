@@ -114,6 +114,7 @@ var define = function define(name, opts) {
   }
 
   BaseError.prototype = Object.create(Error.prototype);
+  BaseError._type = name;
   BaseError._opts = opts;
 
   BaseError.prototype.friendly = attachFriendly(name, opts);
