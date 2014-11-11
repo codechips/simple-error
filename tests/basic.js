@@ -15,6 +15,9 @@ test('default error', function (t) {
   t.ok(err instanceof Error);
   t.ok(err instanceof DefaultError);
 
+  t.equal(DefaultError._type, 'DefaultError', 'constructor type should be equal');
+  t.equal(DefaultError._name, 'DefaultError', 'constructor name should be equal');
+
   t.equal(err.name, 'DefaultError');
   t.equal(err.type, 'DefaultError');
   t.equal(err.code, 0);
