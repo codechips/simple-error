@@ -81,6 +81,8 @@ test('not found error', function (t) {
   t.equal(err.statusCode, 404);
   t.equal(err.message, 'not found');
 
+  t.equal(NotFoundError._type, 'NotFoundError', 'constructor type should be equal');
+  t.equal(NotFoundError._name, 'NotFoundError', 'constructor name should be equal');
   t.ok(err instanceof Error);
   t.ok(err instanceof ApiError);
   t.ok(err instanceof NotFoundError);
