@@ -87,7 +87,7 @@ var define = function define(name, opts) {
     var cargs = [].slice.call(arguments);
 
     if (typeof Error.captureStackTrace === 'function') {
-      Error.captureStackTrace(this, this.constructor);
+      Error.captureStackTrace(this);
     }
 
     this.name = this.type = name;
